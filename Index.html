@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMJ.Job – Générateur de reçu</title>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+body{
+    background:linear-gradient(to right,#020617,#0f172a);
+    color:#fff;
+}
+.container{
+    max-width:600px;
+    margin:50px auto;
+    background:#020617;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+h1{
+    text-align:center;
+    color:#00c2ff;
+    margin-bottom:20px;
+}
+label{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+}
+input{
+    width:100%;
+    padding:12px;
+    margin-top:6px;
+    border-radius:8px;
+    border:none;
+    outline:none;
+}
+button{
+    margin-top:25px;
+    width:100%;
+    padding:15px;
+    background:#00c2ff;
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+button:hover{
+    background:#0f172a;
+    color:#00c2ff;
+    border:1px solid #00c2ff;
+}
+.footer{
+    text-align:center;
+    margin-top:15px;
+    font-size:14px;
+    color:#94a3b8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Reçu de paiement</h1>
+
+    <label>Nom de l'utilisateur</label>
+    <input type="text" id="nom" placeholder="Ex : Jean Mukendi">
+
+    <label>Numéro de téléphone</label>
+    <input type="text" id="numero" placeholder="Ex : 097xxxxxxx">
+
+    <label>Adresse email</label>
+    <input type="email" id="email" placeholder="Ex : user@email.com">
+
+    <label>Date de paiement</label>
+    <input type="date" id="date">
+
+    <label>Montant payé (FC)</label>
+    <input type="number" id="montant" placeholder="Ex : 5000">
+
+    <button onclick="genererPDF()">Télécharger le reçu PDF</button>
+
+    <div class="footer">
+        BMJ.Job – Reçu officiel de paiement
+    </div>
+</div>
+
+<script>
+function genererPDF(){
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const nom = document.getElementById("nom").value;
+    const numero = document.getElementById("numero").value;
+    const email = document.getElementById("email").value;
+    const date = document.getElementById("date").value;
+    const montant = document.getElementById("montant").value;
+
+    // En-tête
+    doc.setFont("Helvetica","bold");
+    doc.setFontSize(14);
+    doc.text("RÉPUBLIQUE DÉMOCRATIQUE DU CONGO",105,20,null,null,"center");
+
+    doc.setFontSize(12);
+    doc.text("REÇU DE PAIEMENT",105,30,null,null,"center");
+
+    doc.setLineWidth(0.5);
+    doc.line(20,35,190,35);
+
+    // Informations utilisateur
+    doc.setFont("Helvetica","normal");
+    doc.setFontSize(11);
+    doc.text("Nom de l'utilisateur : " + nom,20,50);
+    doc.text("Numéro de téléphone : " + numero,20,60);
+    doc.text("Adresse email : " + email,20,70);
+    doc.text("Date de paiement : " + date,20,80);
+    doc.text("Montant payé : " + montant + " FC",20,90);
+
+    doc.setLineWidth(0.3);
+    doc.line(20,100,190,100);
+
+    // Message élégant
+    doc.setFont("Helvetica","italic");
+    doc.text(
+        "Nous certifions par la présente que le paiement mentionné ci-dessus a été "
+        + "effectué avec succès. Ce reçu fait foi et peut être utilisé comme preuve "
+        + "officielle de transaction auprès de BMJ.Job.",
+        20,115,{maxWidth:170}
+    );
+
+    doc.text(
+        "Merci pour votre confiance et votre engagement envers notre plateforme. "
+        + "BMJ.Job vous souhaite plein succès.",
+        20,145,{maxWidth:170}
+    );
+
+    doc.setFont("Helvetica","bold");
+    doc.text("BMJ.Job",20,175);
+    doc.setFont("Helvetica","normal");
+    doc.text("Plateforme officielle de services et opportunités",20,183);
+
+    // Télécharger le PDF
+    doc.save("recu_paiement_BMJ.Job.pdf");
+}
+</script>
+
+</body>
+</html>
